@@ -13,4 +13,4 @@ spec:
       requests:
         memory: 100Mi
         cpu: 100m
-    command: ["git clone https://github.com/ersp-2024-pannuto/human-activity-recognition-base-model.git"]
+    command: ["/bin/sh", "-c", "git clone https://github.com/ersp-2024-pannuto/human-activity-recognition-base-model.git"]
