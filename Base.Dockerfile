@@ -1,102 +1,45 @@
-# Use Ubuntu as the base image
-FROM ubuntu:latest
+# Use a base image with Python 3.10
+FROM python:3.10-slim
 
-# Set non-interactive mode to avoid interactive prompts during installation
-ENV DEBIAN_FRONTEND=noninteractive
-
-# Update and install dependencies
+# Install the necessary system dependencies (including dependencies to install specific Python versions)
 RUN apt-get update && \
     apt-get install -y \
-    software-properties-common \
+    wget \
     curl \
-    git \
-    python3.10 \
-    python3.10-distutils \
+    gnupg2 \
+    lsb-release \
+    ca-certificates \
+    build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Set Python 3.10 as default python version
-RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
+# Install Python 3.10.11 specifically
+RUN curl -sS https://www.python.org/ftp/python/3.10.11/Python-3.10.11.tgz | tar -xz -C /opt && \
+    cd /opt/Python-3.10.11 && \
+    ./configure --enable-optimizations && \
+    make -j$(nproc) && \
+    make altinstall
 
-# Install pip for Python 3.10
-RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
-    python3 get-pip.py && \
-    rm get-pip.py
+# Set python3.10 as the default python version
+RUN ln -s /usr/local/bin/python3.10 /usr/bin/python && \
+    ln -s /usr/local/bin/pip3.10 /usr/bin/pip
 
-# Install the required Python libraries
-RUN pip install --no-cache-dir \
-    absl-py==1.4.0 \
-    astunparse==1.6.3 \
-    attrs==25.1.0 \
-    cachetools==5.5.1 \
-    certifi==2025.1.31 \
-    charset-normalizer==3.4.1 \
-    contourpy==1.3.1 \
-    cycler==0.12.1 \
-    dm-tree==0.1.9 \
-    flatbuffers==25.1.24 \
-    fonttools==4.55.8 \
-    gast==0.4.0 \
-    google-auth==2.38.0 \
-    google-auth-oauthlib==1.0.0 \
-    google-pasta==0.2.0 \
-    grpcio==1.70.0 \
-    h5py==3.12.1 \
-    idna==3.10 \
-    jax==0.4.30 \
-    jaxlib==0.4.30 \
-    joblib==1.4.2 \
-    keras==2.12.0 \
-    kiwisolver==1.4.8 \
-    libclang==18.1.1 \
-    Markdown==3.7 \
-    MarkupSafe==3.0.2 \
-    matplotlib==3.6.2 \
-    ml_dtypes==0.5.1 \
-    mypy-extensions==1.0.0 \
-    numpy==1.23.5 \
-    oauthlib==3.2.2 \
-    opt_einsum==3.4.0 \
-    packaging==24.2 \
-    pandas==1.5.3 \
-    pillow==11.1.0 \
-    protobuf==4.25.6 \
-    pyasn1==0.6.1 \
-    pyasn1_modules==0.4.1 \
-    pydantic==1.10.9 \
-    pydantic-argparse==0.3.0 \
-    pyparsing==3.2.1 \
-    python-dateutil==2.9.0.post0 \
-    pytz==2025.1 \
-    requests==2.32.3 \
-    requests-oauthlib==2.0.0 \
-    rsa==4.9 \
-    scikit-learn==1.1.2 \
-    scipy==1.10.0 \
-    seaborn==0.11.2 \
-    six==1.17.0 \
-    tensorboard==2.12.3 \
-    tensorboard-data-server==0.7.2 \
-    tensorflow==2.12.0 \
-    tensorflow-estimator==2.12.0 \
-    tensorflow-intel==2.12.0 \
-    tensorflow-io-gcs-filesystem==0.31.0 \
-    tensorflow-model-optimization==0.7.4 \
-    termcolor==2.5.0 \
-    threadpoolctl==3.5.0 \
-    typing-inspect==0.7.1 \
-    typing_extensions==4.12.2 \
-    urllib3==2.3.0 \
-    Werkzeug==3.1.3 \
-    wrapt==1.14.1
+# Verify the Python version
+RUN python --version
 
-# Verify installations
-RUN python3 --version && git --version
-
-# Set the working directory
+# Set the working directory in the container
 WORKDIR /app
 
-# Expose the default port (Optional, depending on use)
-EXPOSE 80
+# Copy the requirements.txt file into the container
+COPY requirements.txt /app/
 
-# Command to keep the container running (optional)
-CMD ["bash"]
+# Upgrade pip to the latest version
+RUN pip install --upgrade pip
+
+# Install the Python dependencies from requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Optionally, copy the rest of the application files into the container
+COPY . /app/
+
+# Set the default command to run your script (if you have one)
+# CMD ["python", "your_script.py"]
