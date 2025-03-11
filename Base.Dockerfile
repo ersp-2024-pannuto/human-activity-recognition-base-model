@@ -1,30 +1,32 @@
-# Use a base image with Python 3.10
-FROM python:3.10-slim
+# Use Ubuntu as the base image
+FROM ubuntu:latest
 
-# Install the necessary system dependencies (including dependencies to install specific Python versions)
+# Set non-interactive mode to avoid interactive prompts during installation
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Update and install dependencies
 RUN apt-get update && \
     apt-get install -y \
-    wget \
+    software-properties-common \
     curl \
-    gnupg2 \
-    lsb-release \
-    ca-certificates \
-    build-essential \
+    git \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python 3.10.11 specifically
-RUN curl -sS https://www.python.org/ftp/python/3.10.11/Python-3.10.11.tgz | tar -xz -C /opt && \
-    cd /opt/Python-3.10.11 && \
-    ./configure --enable-optimizations && \
-    make -j$(nproc) && \
-    make altinstall
+# Add the repository for Python 3.10 and install Python
+RUN add-apt-repository ppa:deadsnakes/ppa && \
+    apt-get update && \
+    apt-get install -y python3.10 python3.10-distutils
 
-# Set python3.10 as the default python version
-RUN ln -s /usr/local/bin/python3.10 /usr/bin/python && \
-    ln -s /usr/local/bin/pip3.10 /usr/bin/pip
+# Set Python 3.10 as default python version
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
 
-# Verify the Python version
-RUN python --version
+# Install pip for Python 3.10
+RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
+    python3 get-pip.py && \
+    rm get-pip.py
+
+# Verify installations
+RUN python3 --version && git --version
 
 # Set the working directory in the container
 WORKDIR /app
@@ -38,8 +40,8 @@ RUN pip install --upgrade pip
 # Install the Python dependencies from requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Optionally, copy the rest of the application files into the container
-COPY . /app/
+# Expose the default port (Optional, depending on use)
+EXPOSE 80
 
-# Set the default command to run your script (if you have one)
-# CMD ["python", "your_script.py"]
+# Command to keep the container running (optional)
+CMD ["bash"]

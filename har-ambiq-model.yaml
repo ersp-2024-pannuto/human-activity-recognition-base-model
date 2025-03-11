@@ -5,12 +5,12 @@ metadata:
 spec:
   containers:
   - name: har-ambiq-model
-    image: yuy080/har-base-docker
+    image: yuy080/har-base-docker2
     resources:
       limits:
-        memory: 100Mi
-        cpu: 100m
+        memory: 4Gi      # 4GB of memory limit (standard for most machines)
+        cpu: 2           # 2 CPU cores limit (standard for most modern systems)
       requests:
-        memory: 100Mi
-        cpu: 100m
+        memory: 4Gi      # 4GB of memory request
+        cpu: 2           # 2 CPU cores request
     command: ["/bin/sh", "-c", "while true; do sleep 1000; done"]

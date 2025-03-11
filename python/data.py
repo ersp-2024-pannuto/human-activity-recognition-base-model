@@ -82,7 +82,7 @@ def augment(X, labels, jitter_sigma=0.01, scaling_sigma=0.05):
 
     return X_new
 
-def userBatches(accelFile, gyroFile, windowSize, stride, windows, vectorizedActivities, lb, labels):
+def userBatches(accelFile, gyroFile, windowSize, stride, windows, vectorizedActivities, lb, labels): #processing Raw Data
     print("... processing: " + accelFile.name + " and " + gyroFile.name)
     accel = pd.read_csv(accelFile, names=['user id', 'Activity Label', 'Time Stamp', 'X', 'Y', 'Z'])
     gyro = pd.read_csv(gyroFile, names=['user id', 'Activity Label', 'Time Stamp', 'X', 'Y', 'Z'])

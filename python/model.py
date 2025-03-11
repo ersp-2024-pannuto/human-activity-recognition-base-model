@@ -79,4 +79,3 @@ if __name__ == "__main__":
         model = load_existing_model(params)
     else:
         model = define_model(n_timesteps, n_features, n_outputs)
-
