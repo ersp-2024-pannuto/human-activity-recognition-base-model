@@ -12,10 +12,11 @@ mpuData = pd.read_csv('datasets/mpu-6050-data.txt')
 # mpuData = mpuData.drop(['Unnamed: 0'], axis=1)
 actMap = {
     'Walking' : 'A',
-    'Jogging': 'B',
-    'Stairs': 'C',
-    'Sitting': 'D',
-    'Standing': 'E'
+    'Walking_Up': 'B',
+    'Walking_Down': 'C',
+    'Write_1': 'D',
+    'Write_2': 'E',
+    'Write_3': 'F'
 }
 print (mpuData['Activity'])
 # Create accel and gyro dataframes

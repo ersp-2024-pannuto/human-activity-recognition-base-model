@@ -52,10 +52,11 @@ def plot_training_results(model, history):
     # Model Metrics
     # confusion matrix
     LABELS = ['WALKING',
-            'JOGGING',
-            'STAIRS',
-            'SITTING',
-            'STANDING']
+            'WALKING_UP', 
+            'WALKING_DOWN',
+            'WRITE_1',
+            'WRITE_2',
+            'WRITE_3']
     y_pred_test = model.predict(test_data,  verbose=0)
     # Take the class with the highest probability from the test predictions
     max_y_pred_test = np.argmax(y_pred_test, axis=1)

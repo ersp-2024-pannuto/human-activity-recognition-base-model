@@ -137,7 +137,7 @@ def get_dataset(params: TrainParams, fine_tune=False):
         trainingDirs = [allDirs[i] for i in range(len(allDirs)) if i in trainingIndices]
         testDirs = [x for x in allDirs if x not in trainingDirs]
 
-        labels = ['A', 'B', 'C', 'D', 'E']
+        labels = ['A', 'B', 'C', 'D', 'E', 'F']
         lb = LabelBinarizer()
         lb.fit(labels)
 
@@ -186,3 +186,4 @@ def get_dataset(params: TrainParams, fine_tune=False):
         save_pkl(aug_file, X=aug_X, y=aug_y, XT=orig_testX, yt=orig_testy)
 
     return aug_X, aug_y, orig_testX, orig_testy
+    #aug_data, aug_labels, test_data, test_labels

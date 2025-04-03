@@ -8,9 +8,9 @@ spec:
     image: yuy080/har-base-docker2
     resources:
       limits:
-        memory: 4Gi      # 4GB of memory limit (standard for most machines)
-        cpu: 2           # 2 CPU cores limit (standard for most modern systems)
+        memory: 16Gi      
+        cpu: 16           
       requests:
-        memory: 4Gi      # 4GB of memory request
-        cpu: 2           # 2 CPU cores request
+        memory: 16Gi
+        cpu: 16           
     command: ["/bin/sh", "-c", "while true; do sleep 1000; done"]
