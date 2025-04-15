@@ -9,8 +9,10 @@ spec:
     resources:
       limits:
         memory: 16Gi      
-        cpu: 16           
+        cpu: 16
+        nvidia.com/gpu: 2           
       requests:
         memory: 16Gi
-        cpu: 16           
+        cpu: 16
+        nvidia.com/gpu: 2           
     command: ["/bin/sh", "-c", "while true; do sleep 1000; done"]
